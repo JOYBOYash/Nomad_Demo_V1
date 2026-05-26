@@ -7,7 +7,8 @@ import { Card } from '@/src/components/ui/Card';
 import { motion, AnimatePresence } from 'motion/react';
 import { LogIn } from 'lucide-react';
 import { auth, provider } from '@/src/lib/firebase';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { toast } from 'react-hot-toast';
 
 export function Login() {
   const { user, login } = useAuth();
@@ -15,7 +16,21 @@ export function Login() {
   const [showSimulatedLogin, setShowSimulatedLogin] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(true); // Start true to check redirect
+
+  useEffect(() => {
+    // Check for redirect result when returning from redirect auth flow
+    getRedirectResult(auth).then(async (result) => {
+      if (result && result.user.email && result.user.displayName) {
+        await login(result.user.email, result.user.displayName, result.user.photoURL || undefined);
+      }
+      setIsGoogleLoading(false);
+    }).catch((error) => {
+      console.error("Google login redirect failed", error);
+      toast.error(error.message || "Google login failed.");
+      setIsGoogleLoading(false);
+    });
+  }, [login]);
 
   if (user) return <Navigate to="/" replace />;
 
@@ -26,10 +41,20 @@ export function Login() {
       if (result.user.email && result.user.displayName) {
         await login(result.user.email, result.user.displayName, result.user.photoURL || undefined);
       }
-    } catch (error) {
-      console.error("Google login failed", error);
-    } finally {
       setIsGoogleLoading(false);
+    } catch (error: any) {
+      console.error("Google login failed", error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        setIsGoogleLoading(false);
+      } else {
+        // Fallback to redirect if popup is blocked or cross-origin isolated
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (redirectError: any) {
+          toast.error(redirectError.message || "Authentication failed.");
+          setIsGoogleLoading(false);
+        }
+      }
     }
   };
 
@@ -81,8 +106,8 @@ export function Login() {
 
           <div className={`transition-opacity duration-300 ${showSimulatedLogin ? 'opacity-0' : 'opacity-100'}`}>
             <div className="flex flex-col items-center text-center space-y-4 mb-8">
-              <div className="w-16 h-16 rounded-2xl bg-brand-600 flex items-center justify-center shadow-lg text-white font-display font-bold text-4xl">
-                N
+              <div className="w-16 h-16 flex items-center justify-center">
+                 <img src="https://www.dropbox.com/scl/fi/eez8in6tuf5mgf3b4scz1/Nomad.svg?rlkey=6x9d65a0tljcelq7n6gmiy9px&raw=1" alt="Nomad Logo" className="w-16 h-16 drop-shadow-md" />
               </div>
               <div>
                 <h1 className="text-3xl font-display font-bold text-slate-900">NOMAD</h1>
