@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Dark mode overrides mapped to original classes used */
+  --color-white: #111318;
+  
+  --color-slate-50: #090a0c;
+  --color-slate-100: #181a20;
+  --color-slate-200: #242832;
+  --color-slate-300: #333845;
+  --color-slate-400: #6b7280;
+  --color-slate-500: #9ca3af;
+  --color-slate-600: #d1d5db;
+  --color-slate-700: #e5e7eb;
+  --color-slate-800: #f3f4f6;
+  --color-slate-900: #f9fafb;
+  --color-slate-950: #ffffff;
+  
+  /* Electric Green brand colors */
+  --color-brand-50: #052e16;
+  --color-brand-100: #064e3b;
+  --color-brand-200: #047857;
+  --color-brand-300: #10b981;
+  --color-brand-400: #34d399;
+  --color-brand-500: #39ff14; /* Electric Green */
+  --color-brand-600: #00ff00; /* Pure Electric Green */
+  --color-brand-700: #00cc00;
+  --color-brand-800: #009900;
+  --color-brand-900: #006600;
+  
+  --color-dark-900: #0f1115;
+  --color-dark-800: #161920;
+  --color-dark-700: #232731;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased font-sans;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display tracking-tight text-slate-900;
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-slate-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-600);
+}
+
+/* Micro animations */
+.hover-lift {
+  @apply transition-transform duration-300 ease-out hover:-translate-y-1 hover:shadow-lg;
+}
