@@ -17,9 +17,9 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center bg-slate-100/90 backdrop-blur-md px-6 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-200/50">
-      <Link to="/" className="flex items-center shrink-0 mr-8 hover:opacity-80 transition-opacity">
-        <img src="https://www.dropbox.com/scl/fi/eez8in6tuf5mgf3b4scz1/Nomad.svg?rlkey=6x9d65a0tljcelq7n6gmiy9px&raw=1" alt="Nomad Logo" className="h-8" />
+    <nav className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 flex items-center bg-slate-100/90 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-200/50 w-[95%] sm:w-auto overflow-x-auto no-scrollbar justify-between sm:justify-start">
+      <Link to="/" className="flex items-center shrink-0 sm:mr-8 hover:opacity-80 transition-opacity">
+        <img src="https://www.dropbox.com/scl/fi/eez8in6tuf5mgf3b4scz1/Nomad.svg?rlkey=6x9d65a0tljcelq7n6gmiy9px&raw=1" alt="Nomad Logo" className="h-6 sm:h-8" />
       </Link>
 
       <div className="flex items-center space-x-2 sm:space-x-8">
@@ -35,7 +35,7 @@ export function Navbar() {
         })}
       </div>
 
-      <div className="flex items-center shrink-0 ml-8 pl-8 border-l border-slate-300/50">
+      <div className="flex items-center shrink-0 sm:ml-8 sm:pl-8 sm:border-l border-slate-300/50">
         <Link to="/profile" className="flex items-center group">
           <img src={user.avatarUrl} alt={user.name} className="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover group-hover:border-brand-500 transition-colors" />
         </Link>
