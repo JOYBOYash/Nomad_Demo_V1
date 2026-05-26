@@ -7,7 +7,7 @@ import { Card } from '@/src/components/ui/Card';
 import { motion, AnimatePresence } from 'motion/react';
 import { LogIn } from 'lucide-react';
 import { auth, provider } from '@/src/lib/firebase';
-import { signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { signInWithPopup } from 'firebase/auth';
 import { toast } from 'react-hot-toast';
 
 export function Login() {
@@ -16,21 +16,7 @@ export function Login() {
   const [showSimulatedLogin, setShowSimulatedLogin] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [isGoogleLoading, setIsGoogleLoading] = useState(true); // Start true to check redirect
-
-  useEffect(() => {
-    // Check for redirect result when returning from redirect auth flow
-    getRedirectResult(auth).then(async (result) => {
-      if (result && result.user.email && result.user.displayName) {
-        await login(result.user.email, result.user.displayName, result.user.photoURL || undefined);
-      }
-      setIsGoogleLoading(false);
-    }).catch((error) => {
-      console.error("Google login redirect failed", error);
-      toast.error(error.message || "Google login failed.");
-      setIsGoogleLoading(false);
-    });
-  }, [login]);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   if (user) return <Navigate to="/" replace />;
 
@@ -47,13 +33,8 @@ export function Login() {
       if (error.code === 'auth/popup-closed-by-user') {
         setIsGoogleLoading(false);
       } else {
-        // Fallback to redirect if popup is blocked or cross-origin isolated
-        try {
-          await signInWithRedirect(auth, provider);
-        } catch (redirectError: any) {
-          toast.error(redirectError.message || "Authentication failed.");
-          setIsGoogleLoading(false);
-        }
+        toast.error(error.message || "Authentication failed.");
+        setIsGoogleLoading(false);
       }
     }
   };
