@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './lib/AuthContext';
 import { AppLayout } from './components/layout/AppLayout';
 import { Login } from './pages/Login';
+import { Landing } from './pages/Landing';
 import { Home } from './pages/Home';
 import { CreateEvent } from './pages/CreateEvent';
 import { MyEvents } from './pages/MyEvents';
@@ -20,7 +21,7 @@ import { News } from './pages/event/News';
 import { Toaster } from 'react-hot-toast';
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, persistedUser, loading } = useAuth();
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -31,7 +32,14 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
       </div>
     );
   }
-  if (!user) return <Navigate to="/login" replace />;
+  
+  if (!user) {
+    if (persistedUser) {
+      return <Navigate to="/login" replace />;
+    }
+    return <Navigate to="/welcome" replace />;
+  }
+  
   return <>{children}</>;
 };
 
@@ -41,6 +49,7 @@ export default function App() {
       <Toaster position="top-center" toastOptions={{ duration: 4000, style: { background: '#1e293b', color: '#fff' } }} />
       <BrowserRouter>
         <Routes>
+          <Route path="/welcome" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
             <Route path="/" element={<Home />} />
