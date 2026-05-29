@@ -307,6 +307,11 @@ export const db = {
     }
   },
 
+  async checkIfBanned(eventId: string, userId: string) {
+    const banned = await fetchDocs<any>('bannedUsers', [{field: 'eventId', op: '==', val: eventId}, {field: 'userId', op: '==', val: userId}]);
+    return banned.length > 0;
+  },
+
   async getBannedUsers(eventId: string) {
     const banned = await fetchDocs<any>('bannedUsers', [{field: 'eventId', op: '==', val: eventId}]);
     const users = await fetchDocs<User>('users');

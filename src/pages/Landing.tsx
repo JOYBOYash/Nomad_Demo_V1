@@ -21,12 +21,7 @@ export function Landing() {
   
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
-      {/* Background Gritty Decorations */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-         <div className="absolute top-10 left-10 w-96 h-96 bg-brand-500 rounded-full mix-blend-screen filter blur-[150px] animate-pulse"></div>
-         <div className="absolute bottom-10 right-10 w-96 h-96 bg-danger rounded-full mix-blend-screen filter blur-[150px] animate-pulse" style={{animationDelay: '1s'}}></div>
-      </div>
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-paper.png')] opacity-20 pointer-events-none mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-paper.png')] opacity-[0.03] pointer-events-none mix-blend-multiply"></div>
 
       <AnimatePresence>
         {isResumingSession && persistedUser && (
@@ -81,8 +76,8 @@ export function Landing() {
           className="w-full flex justify-center"
         >
           {persistedUser ? (
-            <div className="w-full max-w-md ticket-edge bg-slate-100 p-1">
-              <div className="border border-dashed border-slate-400 p-4 flex flex-col gap-3 h-full">
+            <div className="w-full max-w-md bg-slate-100 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+              <div className="flex flex-col gap-3 h-full relative z-10">
                 <button 
                    onClick={handleContinueAs}
                    className="w-full py-4 bg-brand-500 hover:bg-brand-400 text-black font-bebas text-2xl tracking-widest transition-colors flex items-center justify-center gap-4 group"
@@ -97,10 +92,8 @@ export function Landing() {
             </div>
           ) : (
             <Link to="/login" className="w-full max-w-xs">
-              <div className="ticket-edge bg-brand-500 text-black p-1 uppercase font-bebas text-2xl tracking-widest hover:scale-[1.02] transition-transform cursor-pointer shadow-[0_0_20px_rgba(201,255,0,0.3)]">
-                 <div className="border border-dashed border-black/50 py-4 text-center">
-                    ENTER STUDIO
-                 </div>
+              <div className="bg-brand-500 rounded-xl text-black py-5 uppercase font-bebas text-2xl tracking-widest hover:scale-[1.02] hover:bg-brand-400 transition-all cursor-pointer shadow-[0_0_20px_rgba(201,255,0,0.3)] text-center relative overflow-hidden">
+                 ENTER STUDIO
               </div>
             </Link>
           )}

@@ -8,7 +8,7 @@ import { Target, Wallet as WalletIcon, Gift, Trophy, ShieldCheck, Settings, User
 import { Button } from '@/src/components/ui/Button';
 
 export function Dashboard() {
-  const { event, hasJoined, setHasJoined } = useOutletContext<{ event: Event, hasJoined: boolean, setHasJoined: any }>();
+  const { event, hasJoined, setHasJoined, isBanned } = useOutletContext<{ event: Event, hasJoined: boolean, isBanned: boolean, setHasJoined: any }>();
   const { user } = useAuth();
   
   const [balance, setBalance] = useState(0);
@@ -67,8 +67,8 @@ export function Dashboard() {
             <p className="text-slate-500 mt-2">{event.description}</p>
           </div>
           {!isCreator && !hasJoined && (
-            <Button onClick={handleJoin} className="shrink-0" size="lg" disabled={event.status === 'Ended' || event.status === 'Canceled'}>
-              {event.status === 'Ended' || event.status === 'Canceled' ? 'Event Closed' : 'Join Event'}
+            <Button onClick={handleJoin} className={`shrink-0 ${isBanned ? 'bg-danger/10 text-danger border border-danger hover:bg-danger/20 hover:text-danger hover:border-danger' : ''}`} size="lg" disabled={event.status === 'Ended' || event.status === 'Canceled' || isBanned}>
+              {isBanned ? 'Banned from Event' : event.status === 'Ended' || event.status === 'Canceled' ? 'Event Closed' : 'Join Event'}
             </Button>
           )}
         </div>
@@ -129,9 +129,9 @@ export function Dashboard() {
 function QuickLink({ to, icon: Icon, label }: { to: string, icon: any, label: string }) {
   return (
     <Link to={to}>
-      <Card className="hover:border-brand-400 hover:shadow-sm transition-all group p-4 flex flex-col items-center justify-center text-center h-full">
-        <Icon size={24} className="text-slate-400 group-hover:text-brand-600 mb-2 transition-colors" />
-        <span className="font-medium text-slate-700 group-hover:text-brand-900">{label}</span>
+      <Card className="hover:border-brand-500 hover:shadow-[0_0_15px_rgba(201,255,0,0.3)] transition-all duration-300 group p-4 flex flex-col items-center justify-center text-center h-full cursor-pointer hover:-translate-y-1">
+        <Icon size={28} className="text-slate-400 group-hover:text-brand-500 mb-3 transition-colors duration-300" />
+        <span className="font-display font-bold tracking-wider text-slate-700 group-hover:text-slate-900">{label}</span>
       </Card>
     </Link>
   );

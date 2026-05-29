@@ -14,6 +14,7 @@ export function EventLayout() {
   const location = useLocation();
   const [event, setEvent] = useState<Event | null>(null);
   const [hasJoined, setHasJoined] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
 
   const loadEvent = () => {
     if (eventId && user) {
@@ -25,6 +26,7 @@ export function EventLayout() {
     loadEvent();
     if (eventId && user) {
       db.hasJoined(eventId, user.id).then(setHasJoined);
+      db.checkIfBanned(eventId, user.id).then(setIsBanned);
     }
   }, [eventId, user]);
 
@@ -87,7 +89,7 @@ export function EventLayout() {
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.2 }}
         >
-          <Outlet context={{ event, hasJoined, setHasJoined, reloadEvent: loadEvent }} />
+          <Outlet context={{ event, hasJoined, isBanned, setHasJoined, reloadEvent: loadEvent }} />
         </motion.div>
       </div>
     </div>

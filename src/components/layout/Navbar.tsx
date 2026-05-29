@@ -17,7 +17,7 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center bg-black/90 backdrop-blur-md px-4 py-3 sm:px-8 border-b border-dashed border-slate-400/50 w-full justify-between shadow-[0_4px_30px_rgb(0,0,0,0.5)]">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center bg-black/90 backdrop-blur-md px-4 py-3 sm:px-8 border-b border-white/5 w-full justify-between shadow-[0_4px_30px_rgb(0,0,0,0.5)]">
       <Link to="/" className="flex items-center shrink-0 sm:mr-10 hover:opacity-80 transition-opacity">
         <h1 className="text-3xl font-bebas text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-white tracking-widest drop-shadow-[0_0_5px_rgba(201,255,0,0.5)] m-0">NOMAD</h1>
       </Link>
@@ -35,7 +35,7 @@ export function Navbar() {
         })}
       </div>
 
-      <div className="flex items-center shrink-0 ml-4 pl-4 sm:ml-8 sm:pl-8 border-l-2 border-dashed border-slate-600">
+      <div className="flex items-center shrink-0 ml-4 pl-4 sm:ml-8 sm:pl-8 border-l border-white/10">
         <Link to="/profile" className="flex items-center group relative cursor-pointer">
           <div className="absolute inset-0 bg-brand-500 blur-sm rounded-full opacity-0 group-hover:opacity-50 transition-opacity"></div>
           <img src={user.avatarUrl} alt={user.name} className="w-10 h-10 rounded-full border-2 border-brand-500 shadow-sm object-cover relative z-10 grayscale group-hover:grayscale-0 transition-all font-sans bg-white" />

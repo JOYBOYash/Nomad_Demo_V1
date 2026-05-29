@@ -12,7 +12,7 @@ import { Users, Coins, X, QrCode, Target } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export function Missions() {
-  const { event, hasJoined, setHasJoined } = useOutletContext<{ event: Event, hasJoined: boolean, setHasJoined: any }>();
+  const { event, hasJoined, setHasJoined, isBanned } = useOutletContext<{ event: Event, hasJoined: boolean, setHasJoined: any, isBanned: boolean }>();
   const { user } = useAuth();
   
   const [missions, setMissions] = useState<any[]>([]);
@@ -196,12 +196,14 @@ export function Missions() {
                     <Button variant="outline" className="w-full text-green-700 bg-green-50 border-green-200 cursor-default" disabled>Completed</Button>
                   ) : (
                     <Button 
-                      className="w-full" 
-                      onClick={() => startScanning(m.id)}
-                      disabled={event.status === 'Ended' || m.status === 'Completed'}
+                      className={`w-full ${isBanned ? 'bg-danger/10 text-danger border border-danger hover:bg-danger/20 hover:text-danger hover:border-danger hover:cursor-not-allowed' : ''}`} 
+                      onClick={() => {
+                        if (!isBanned) startScanning(m.id);
+                      }}
+                      disabled={event.status === 'Ended' || m.status === 'Completed' || isBanned}
                     >
                       <QrCode className="mr-2" size={16} />
-                      {hasJoined ? 'Scan QR to Complete' : 'Join Event to Complete'}
+                      {isBanned ? 'Banned from Event' : hasJoined ? 'Scan QR to Complete' : 'Join Event to Complete'}
                     </Button>
                   )}
                 </div>

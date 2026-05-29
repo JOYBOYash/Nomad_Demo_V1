@@ -42,12 +42,7 @@ export function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 relative overflow-hidden font-sans">
-      {/* Background Gritty Decorations */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-         <div className="absolute top-10 right-10 w-96 h-96 bg-brand-500 rounded-full mix-blend-screen filter blur-[150px] animate-pulse"></div>
-         <div className="absolute bottom-10 left-10 w-96 h-96 bg-danger rounded-full mix-blend-screen filter blur-[150px] animate-pulse" style={{animationDelay: '1s'}}></div>
-      </div>
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-paper.png')] opacity-20 pointer-events-none mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-paper.png')] opacity-[0.03] pointer-events-none mix-blend-multiply"></div>
 
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }} className="w-full max-w-md relative z-10">
           
@@ -81,8 +76,8 @@ export function Login() {
             <p className="text-slate-500 font-display uppercase tracking-widest mt-2 border-y border-slate-300 py-1 inline-block">AUTHENTICATE IDENTITY</p>
           </div>
 
-          <div className="ticket-edge bg-slate-100 p-1 mb-4 shadow-2xl">
-             <div className="border border-dashed border-slate-400 p-6 flex flex-col items-center">
+          <div className="bg-slate-100 rounded-2xl p-8 mb-4 shadow-2xl relative overflow-hidden">
+             <div className="flex flex-col items-center relative z-10">
                 
                 {persistedUser ? (
                   <div className="w-full flex flex-col gap-4">

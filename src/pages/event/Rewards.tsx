@@ -10,7 +10,7 @@ import { Users, Coins } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 export function Rewards() {
-  const { event, hasJoined } = useOutletContext<{ event: Event, hasJoined: boolean }>();
+  const { event, hasJoined, isBanned } = useOutletContext<{ event: Event, hasJoined: boolean, isBanned: boolean }>();
   const { user } = useAuth();
   
   const [rewards, setRewards] = useState<any[]>([]);
@@ -234,11 +234,13 @@ export function Rewards() {
                       </div>
                     ) : (
                       <Button 
-                        className="w-full" 
-                        disabled={!hasJoined || !canAfford || !hasInventory}
-                        onClick={() => handleRedeem(r.id)}
+                        className={`w-full ${isBanned ? 'bg-danger/10 text-danger border border-danger hover:bg-danger/20 hover:text-danger hover:border-danger hover:cursor-not-allowed' : ''}`} 
+                        disabled={isBanned || !hasJoined || !canAfford || !hasInventory}
+                        onClick={() => {
+                          if (!isBanned) handleRedeem(r.id);
+                        }}
                       >
-                        {!hasJoined ? 'Join Event to Redeem' : !hasInventory ? 'Sold Out' : !canAfford ? 'Insufficent Tokens' : 'Redeem'}
+                        {isBanned ? 'Banned from Event' : !hasJoined ? 'Join Event to Redeem' : !hasInventory ? 'Sold Out' : !canAfford ? 'Insufficent Tokens' : 'Redeem'}
                       </Button>
                     )}
                   </div>
