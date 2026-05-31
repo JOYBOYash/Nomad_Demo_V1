@@ -80,7 +80,7 @@ export function Landing() {
               <div className="flex flex-col gap-3 h-full relative z-10">
                 <button 
                    onClick={handleContinueAs}
-                   className="w-full py-4 bg-brand-500 hover:bg-brand-400 text-black font-bebas text-2xl tracking-widest transition-colors flex items-center justify-center gap-4 group"
+                   className="w-full py-4 bg-brand-500 hover:bg-brand-400 text-black font-bebas text-2xl tracking-widest transition-all cursor-pointer hover:scale-[1.02] active:scale-95 shadow-[0_0_15px_rgba(201,255,0,0.3)] flex items-center justify-center gap-4 group rounded-xl"
                 >
                   <img src={persistedUser.avatarUrl} alt={persistedUser.name} className="w-8 h-8 rounded-full border border-black grayscale group-hover:grayscale-0 transition-all" />
                   CONTINUE AS {persistedUser.name.split(' ')[0]}
@@ -92,7 +92,7 @@ export function Landing() {
             </div>
           ) : (
             <Link to="/login" className="w-full max-w-xs">
-              <div className="bg-brand-500 rounded-xl text-black py-5 uppercase font-bebas text-2xl tracking-widest hover:scale-[1.02] hover:bg-brand-400 transition-all cursor-pointer shadow-[0_0_20px_rgba(201,255,0,0.3)] text-center relative overflow-hidden">
+              <div className="bg-brand-500 rounded-xl text-black py-5 uppercase font-bebas text-2xl tracking-widest hover:scale-[1.02] active:scale-95 hover:bg-brand-400 transition-all cursor-pointer shadow-[0_0_20px_rgba(201,255,0,0.3)] text-center relative overflow-hidden">
                  ENTER STUDIO
               </div>
             </Link>

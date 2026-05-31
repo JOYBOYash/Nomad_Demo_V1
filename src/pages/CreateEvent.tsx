@@ -119,7 +119,7 @@ export function CreateEvent() {
                    <div className="w-full text-center relative">
                      <img src={imagePreview} alt="Preview" className="max-h-64 mx-auto object-contain" />
                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <label htmlFor="file-upload" className="cursor-pointer text-white font-medium px-4 py-2 bg-slate-900/40 rounded-lg backdrop-blur-sm hover:bg-slate-900/60 transition-colors">
+                        <label htmlFor="file-upload" className="cursor-pointer text-white font-medium px-4 py-2 bg-slate-900/40 rounded-lg backdrop-blur-sm hover:bg-slate-900/60 transition-all active:scale-95 border border-white/20">
                            Change Image
                         </label>
                      </div>
@@ -128,7 +128,7 @@ export function CreateEvent() {
                   <div className="space-y-1 text-center py-8">
                     <ImageIcon className="mx-auto h-12 w-12 text-slate-400" />
                     <div className="flex text-sm text-slate-600 justify-center">
-                      <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-brand-600 hover:text-brand-500 focus-within:outline-none">
+                      <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-brand-600 hover:text-brand-700 transition-all active:scale-95 focus-within:outline-none px-1">
                         <span>Upload a file</span>
                       </label>
                       <p className="pl-1">or drag and drop</p>

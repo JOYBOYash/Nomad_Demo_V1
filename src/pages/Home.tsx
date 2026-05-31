@@ -6,6 +6,7 @@ import { useAuth } from '../lib/AuthContext';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
+import { Skeleton } from '../components/ui/Skeleton';
 import { Calendar, Users, ArrowRight, Settings, Compass } from 'lucide-react';
 import { formatDate } from '../lib/utils';
 import { motion } from 'motion/react';
@@ -13,18 +14,24 @@ import { motion } from 'motion/react';
 export function Home() {
   const { user } = useAuth();
   const [events, setEvents] = useState<{ event: Event, hasJoined: boolean, isCreator: boolean }[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadEvents = async () => {
-      const allEvents = await db.getEvents();
-      const liveEvents = allEvents.filter(e => e.status === 'Live' || e.status === 'Upcoming');
-      
-      const mapped = await Promise.all(liveEvents.map(async e => {
-        const hasJoined = await db.hasJoined(e.id, user!.id);
-        const isCreator = e.creatorId === user!.id;
-        return { event: e, hasJoined, isCreator };
-      }));
-      setEvents(mapped);
+      setLoading(true);
+      try {
+        const allEvents = await db.getEvents();
+        const liveEvents = allEvents.filter(e => e.status === 'Live' || e.status === 'Upcoming');
+        
+        const mapped = await Promise.all(liveEvents.map(async e => {
+          const hasJoined = await db.hasJoined(e.id, user!.id);
+          const isCreator = e.creatorId === user!.id;
+          return { event: e, hasJoined, isCreator };
+        }));
+        setEvents(mapped);
+      } finally {
+        setLoading(false);
+      }
     };
     if (user) loadEvents();
   }, [user]);
@@ -45,7 +52,22 @@ export function Home() {
         <p className="text-slate-500 mt-2">Find and explore upcoming and live events to earn rewards.</p>
       </div>
 
-      {events.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="h-[460px] flex flex-col bg-white overflow-hidden shadow-sm">
+              <Skeleton className="h-56 w-full rounded-none" />
+              <CardContent className="flex-1 flex flex-col p-6">
+                <Skeleton className="h-7 w-3/4 mb-4" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-4 w-2/3 mb-4" />
+                <Skeleton className="h-10 w-full mt-auto" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : events.length === 0 ? (
         <Card className="text-center py-16 bg-white border-dashed border-2">
           <div className="text-slate-400 mb-4 flex justify-center"><Compass size={48} className="text-brand-300" /></div>
           <h3 className="text-lg font-medium text-slate-900">No Events Found</h3>

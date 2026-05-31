@@ -5,6 +5,7 @@ import { Event } from '../types';
 import { useAuth } from '../lib/AuthContext';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
+import { Skeleton } from '../components/ui/Skeleton';
 import { ArrowRight, Settings } from 'lucide-react';
 import { formatDate } from '../lib/utils';
 import { motion } from 'motion/react';
@@ -49,15 +50,69 @@ export function MyEvents() {
   const { user } = useAuth();
   const [createdEvents, setCreatedEvents] = useState<Event[]>([]);
   const [joinedEvents, setJoinedEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadEvents = async () => {
-      const allEvents = await db.getEvents();
-      setCreatedEvents(allEvents.filter(e => e.creatorId === user!.id));
-      setJoinedEvents(await db.getJoinedEvents(user!.id));
+      setLoading(true);
+      try {
+        const allEvents = await db.getEvents();
+        setCreatedEvents(allEvents.filter(e => e.creatorId === user!.id));
+        setJoinedEvents(await db.getJoinedEvents(user!.id));
+      } finally {
+        setLoading(false);
+      }
     };
     if (user) loadEvents();
   }, [user]);
+
+  if (loading) {
+    return (
+      <div className="space-y-12">
+        <section>
+          <div className="flex justify-between items-end mb-6">
+             <div>
+               <h2 className="text-2xl font-display font-bold text-slate-900">Created Events</h2>
+               <p className="text-slate-500 mt-1">Events you host and manage.</p>
+             </div>
+             <Skeleton className="h-9 w-24" />
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8">
+            {[1, 2].map((i) => (
+              <Card key={i} className="h-[400px] flex flex-col bg-white overflow-hidden shadow-sm">
+                <Skeleton className="h-44 w-full rounded-none" />
+                <CardContent className="flex-1 flex flex-col p-6 pt-5">
+                  <Skeleton className="h-7 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-1/2 mb-4" />
+                  <Skeleton className="h-10 w-full mb-6" />
+                  <Skeleton className="h-10 w-full mt-auto" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+        <section>
+          <div className="mb-6">
+            <h2 className="text-2xl font-display font-bold text-slate-900">Joined Events</h2>
+            <p className="text-slate-500 mt-1">Events you are participating in.</p>
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-8">
+            {[1, 2].map((i) => (
+              <Card key={`joined-${i}`} className="h-[400px] flex flex-col bg-white overflow-hidden shadow-sm">
+                <Skeleton className="h-44 w-full rounded-none" />
+                <CardContent className="flex-1 flex flex-col p-6 pt-5">
+                  <Skeleton className="h-7 w-3/4 mb-2" />
+                  <Skeleton className="h-4 w-1/2 mb-4" />
+                  <Skeleton className="h-10 w-full mb-6" />
+                  <Skeleton className="h-10 w-full mt-auto" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-12">

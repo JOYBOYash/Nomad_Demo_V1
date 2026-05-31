@@ -36,7 +36,7 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center shrink-0 ml-4 pl-4 sm:ml-8 sm:pl-8 border-l border-white/10">
-        <Link to="/profile" className="flex items-center group relative cursor-pointer">
+        <Link to="/profile" className="flex items-center group relative cursor-pointer hover:scale-105 active:scale-95 transition-all">
           <div className="absolute inset-0 bg-brand-500 blur-sm rounded-full opacity-0 group-hover:opacity-50 transition-opacity"></div>
           <img src={user.avatarUrl} alt={user.name} className="w-10 h-10 rounded-full border-2 border-brand-500 shadow-sm object-cover relative z-10 grayscale group-hover:grayscale-0 transition-all font-sans bg-white" />
         </Link>

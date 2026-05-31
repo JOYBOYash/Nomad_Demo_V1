@@ -7,6 +7,7 @@ import { motion } from 'motion/react';
 import { LayoutDashboard, Target, Wallet as WalletIcon, Gift, Trophy, ShieldCheck, Settings, Newspaper } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { Badge } from '../ui/Badge';
+import { Skeleton } from '../ui/Skeleton';
 
 export function EventLayout() {
   const { eventId } = useParams();
@@ -15,22 +16,63 @@ export function EventLayout() {
   const [event, setEvent] = useState<Event | null>(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [isBanned, setIsBanned] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const loadEvent = () => {
+  const loadEvent = async () => {
     if (eventId && user) {
-      db.getEvent(eventId).then(e => setEvent(e || null));
+      const e = await db.getEvent(eventId);
+      setEvent(e || null);
     }
   };
 
   useEffect(() => {
-    loadEvent();
-    if (eventId && user) {
-      db.hasJoined(eventId, user.id).then(setHasJoined);
-      db.checkIfBanned(eventId, user.id).then(setIsBanned);
-    }
+    let active = true;
+    const fetchAll = async () => {
+      setLoading(true);
+      try {
+        if (eventId && user) {
+          await loadEvent();
+          const joined = await db.hasJoined(eventId, user.id);
+          const banned = await db.checkIfBanned(eventId, user.id);
+          if (active) {
+            setHasJoined(joined);
+            setIsBanned(banned);
+          }
+        }
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+    fetchAll();
+    return () => { active = false; };
   }, [eventId, user]);
 
-  if (!event) return <div className="p-8 text-center text-slate-500">Loading Event...</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col lg:flex-row gap-8">
+        <aside className="w-full lg:w-64 shrink-0 space-y-6">
+          <div>
+            <Skeleton className="h-8 w-3/4 mb-2" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+          <div className="flex flex-col space-y-2">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
+          </div>
+        </aside>
+        <div className="flex-1 w-full space-y-8">
+           <Skeleton className="h-[200px] w-full" />
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Skeleton className="h-[150px] w-full" />
+              <Skeleton className="h-[150px] w-full" />
+           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!event) return <div className="p-8 text-center text-slate-500">Event Not Found</div>;
 
   const isCreator = event.creatorId === user?.id;
   const showWallet = !isCreator && hasJoined;
@@ -70,7 +112,7 @@ export function EventLayout() {
             const active = location.pathname === item.to || (location.pathname === `/events/${eventId}` && item.to === `/events/${eventId}/`);
             return (
               <Link key={item.to} to={item.to} className={cn(
-                "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer active:scale-95",
                 active ? "bg-brand-50 text-brand-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
               )}>
                 <Icon size={18} className={active ? "text-brand-600" : "text-slate-400"} />

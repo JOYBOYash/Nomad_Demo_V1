@@ -1,4 +1,4 @@
-import { useEffect, useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { Event, Mission } from '@/src/types';
 import { useAuth } from '@/src/lib/AuthContext';
@@ -53,11 +53,29 @@ export function Missions() {
     setIsScanningActive(true);
   };
 
+  const lastScanRef = useRef<number>(0);
+  
   const handleScanResult = async (detectedCodes: IDetectedBarcode[]) => {
-    if (detectedCodes.length > 0 && isScanningActive) {
-      setIsScanningActive(false); // Stop scanning immediately to prevent multiple scans
+    if (detectedCodes.length > 0) {
+      if (!isScanningActive || !scanningMissionId) return;
+      
+      const now = Date.now();
+      if (now - lastScanRef.current < 1500) return; // Debounce scans
+
       const text = detectedCodes[0].rawValue;
-      if (text === `MISSION_COMPLETION:${event.id}:${scanningMissionId}`) {
+      if (!text) return;
+      
+      lastScanRef.current = now;
+
+      // Haptic feedback
+      if ('vibrate' in navigator) {
+        navigator.vibrate(200);
+      }
+
+      const expectedText = `MISSION_COMPLETION:${event.id}:${scanningMissionId}`;
+      
+      if (text.trim() === expectedText.trim()) {
+        setIsScanningActive(false);
         const mId = scanningMissionId;
         setScanningMissionId(null);
         try {
@@ -68,8 +86,7 @@ export function Missions() {
           toast.error(e.message);
         }
       } else {
-        toast.error("Invalid QR Code for this mission.");
-        setScanningMissionId(null);
+         toast.error("Invalid QR Code for this mission.");
       }
     }
   };
@@ -217,7 +234,7 @@ export function Missions() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
           <Card className="max-w-sm w-full relative">
             <button 
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-all cursor-pointer hover:scale-110 active:scale-95"
               onClick={() => setQrModalMission(null)}
             >
               <X size={24} />
@@ -247,7 +264,7 @@ export function Missions() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md">
           <div className="max-w-md w-full relative">
             <button 
-              className="absolute -top-12 right-0 text-white hover:text-slate-300 transition-colors bg-white/10 rounded-full p-2"
+              className="absolute -top-12 right-0 text-white hover:text-slate-300 bg-white/10 rounded-full p-2 transition-all cursor-pointer hover:scale-110 active:scale-95"
               onClick={() => {
                 setScanningMissionId(null);
                 setIsScanningActive(false);
@@ -264,7 +281,7 @@ export function Missions() {
                 onScan={handleScanResult} 
                 formats={['qr_code']}
                 components={{
-                   audio: false,
+                   audio: true,
                    zoom: false,
                 }}
                 styles={{

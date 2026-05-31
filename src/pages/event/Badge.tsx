@@ -182,7 +182,7 @@ export function Badge() {
                         </div>
                       )}
                       {event.status !== 'Ended' && (
-                        <label className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded text-xs font-medium text-center">
+                        <label className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer rounded text-xs font-medium text-center hover:bg-black/60 active:scale-95">
                            Edit
                            <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageChange(e, t.id)} />
                         </label>
