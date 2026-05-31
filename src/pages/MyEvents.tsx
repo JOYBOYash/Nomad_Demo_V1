@@ -53,17 +53,22 @@ export function MyEvents() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
     const loadEvents = async () => {
       setLoading(true);
       try {
         const allEvents = await db.getEvents();
-        setCreatedEvents(allEvents.filter(e => e.creatorId === user!.id));
-        setJoinedEvents(await db.getJoinedEvents(user!.id));
+        if (active) {
+          setCreatedEvents(allEvents.filter(e => e.creatorId === user!.id));
+          const joined = await db.getJoinedEvents(user!.id);
+          if (active) setJoinedEvents(joined);
+        }
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
     if (user) loadEvents();
+    return () => { active = false; };
   }, [user]);
 
   if (loading) {

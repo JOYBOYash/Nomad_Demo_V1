@@ -17,6 +17,7 @@ export function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
     const loadEvents = async () => {
       setLoading(true);
       try {
@@ -28,12 +29,13 @@ export function Home() {
           const isCreator = e.creatorId === user!.id;
           return { event: e, hasJoined, isCreator };
         }));
-        setEvents(mapped);
+        if (active) setEvents(mapped);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
     if (user) loadEvents();
+    return () => { active = false; };
   }, [user]);
 
   const joinEvent = async (id: string) => {
